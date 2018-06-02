@@ -1,4 +1,4 @@
-import { makeModuleKeyName } from 'simpler-redux'
+import { makeSharedModuleKeyName } from 'simpler-redux'
 import { externalServiceFunctions as loaderExternalServiceFunctions } from '../Loader'
 import { externalServiceFunctions as errorExternalServiceFunctions } from '../Error'
 
@@ -15,19 +15,21 @@ const onGetKey = 'onGet'
 
 // Helpers for the key names with a module suffix to avoid key collision in a consumer.
 export const makeDataKey = options =>
-  makeModuleKeyName(options, dataKey)
+  makeSharedModuleKeyName(dataKey, options)
 
 const makeActiveKey = options =>
-  makeModuleKeyName(options, activeKey)
+  makeSharedModuleKeyName(activeKey, options)
 
 export const getInitialState = options => ({
   [makeDataKey(options)]: [],
   [makeActiveKey(options)]: false
 })
 
-export const selectors = {
-  [dataKey]: (state, reducerKey, options) => state[reducerKey][makeDataKey(options)],
-  [activeKey]: (state, reducerKey, options) => state[reducerKey][makeActiveKey(options)]
+export const getSelectors = (reducerKey, options) => {
+  return {
+    [makeDataKey(options)]: state => state[reducerKey][makeDataKey(options)],
+    [makeActiveKey(options)]: state => state[reducerKey][makeActiveKey(options)]
+  }
 }
 
 const operationStart = (store, reducerKey, options) => {
@@ -66,22 +68,24 @@ const operationBadStatus = (store, reducerKey, options, response) => {
   options.badStatusCallback(response)
 }
 
-export const serviceFunctions = {
-  [onGetKey]: (store, reducerKey, options) => {
-    operationStart(store, reducerKey, options)
-    fetch(url).then(response => {
-      if (response.ok) {
-        return response.json()
-      }
-      if (typeof options.badStatusCallback === 'function') {
-        return operationBadStatus(store, reducerKey, options, response)
-      }
-      throw new Error('Error')
-    }).then(data =>
-      operationSuccess(store, reducerKey, options, data)
-    ).catch(() =>
-      operationFailed(store, reducerKey, options)
-    )
+export const getServiceFunctions = (reducerKey, options) => {
+  return {
+    [makeSharedModuleKeyName(onGetKey, options)]: store => {
+      operationStart(store, reducerKey, options)
+      fetch(url).then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+        if (typeof options.badStatusCallback === 'function') {
+          return operationBadStatus(store, reducerKey, options, response)
+        }
+        throw new Error('Error')
+      }).then(data =>
+        operationSuccess(store, reducerKey, options, data)
+      ).catch(() =>
+        operationFailed(store, reducerKey, options)
+      )
+    }
   }
 }
 

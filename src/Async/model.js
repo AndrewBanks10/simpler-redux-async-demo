@@ -1,11 +1,10 @@
 import {
   generalReducer,
-  buildServiceFunctionsObjectFromShared,
-  buildSelectorsObjectFromShared
+  makeSharedModuleKeyName
 } from 'simpler-redux'
 import {
-  serviceFunctions as sharedAsyncServiceFunctions,
-  selectors as sharedAsyncSelectors,
+  getServiceFunctions as sharedAsyncGetServiceFunctions,
+  getSelectors as sharedAsyncGetSelectors,
   getInitialState as sharedAsyncInitialState,
   externalServiceFunctions as sharedAsyncExternalServiceFunctions
 } from '../SharedModel/Async'
@@ -20,14 +19,15 @@ const initialState = {
 }
 
 export const selectors = {
-  ...buildSelectorsObjectFromShared(sharedAsyncSelectors, reducerKey, baseOptions)
+  ...sharedAsyncGetSelectors(reducerKey, baseOptions)
 }
 
 const filter = data => data
+const sharedAsyncServiceFunctions = sharedAsyncGetServiceFunctions(reducerKey, { ...baseOptions, filter })
 export const serviceFunctions = {
-  ...buildServiceFunctionsObjectFromShared(sharedAsyncServiceFunctions, reducerKey, { ...baseOptions, filter }),
+  ...sharedAsyncServiceFunctions,
   clear: store => sharedAsyncExternalServiceFunctions.setData(store, reducerKey, baseOptions, []),
-  componentDidMount: store => sharedAsyncServiceFunctions.onGet(store, reducerKey, baseOptions),
+  componentDidMount: store => sharedAsyncServiceFunctions[makeSharedModuleKeyName('onGet', baseOptions)](store, reducerKey, baseOptions),
   onConstructor: () => console.log('onConstructor'),
   componentWillUnmount: () => console.log('onComponentWillUnmount'),
   onRender: () => console.log('onRender')

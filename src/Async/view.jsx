@@ -26,16 +26,16 @@ export default props =>
             <th>Text</th>
             <th>Completed</th>
           </tr>
-          {props.dataAsyncModule.map((e, index) =>
+          {props.data.map((e, index) =>
             <AsyncEntry key={index} item={e} />
           )}
         </tbody>
       </table>
     </div>
-    <button disabled={props.activeAsyncModule} className='ajax-button-container' onClick={props.onGetAsyncModule}>
+    <button disabled={props.active} className='ajax-button-container' onClick={props.onGet}>
         Ajax Load
     </button>
-    <button disabled={props.activeAsyncModule} className='ajax-button-container' onClick={props.clear}>
+    <button disabled={props.active} className='ajax-button-container' onClick={props.clear}>
         Clear
     </button>
   </div>

@@ -1,4 +1,4 @@
-import { generalReducer, stateAccessors } from 'simpler-redux'
+import { stateAccessors } from 'simpler-redux'
 import { externalServiceFunctions as loaderExternalServiceFunctions } from '../Loader'
 import { externalServiceFunctions as errorExternalServiceFunctions } from '../Error'
 
@@ -6,27 +6,22 @@ const url = 'https://jsonplaceholder.typicode.com/todos'
 
 export const reducerKey = 'async'
 
-// Used for simpler state management when shared modules are not going to be used.
-// For example, setState({active: true}) is the usage.
-let setState
-export const storeIsDefinedCallback = store =>
-  ({setState} = stateAccessors(store, reducerKey))
-
-const initialState = {
+export const initialUIState = {
   data : [],
   active : false
 }
 
-export const selectors = {
-  data : state => state[reducerKey].data,
-  active: state => state[reducerKey].active
-}
+export const initialState = initialUIState
+
+let setState, reducerState
+export const storeIsDefinedCallback = store =>
+  ({setState, reducerState} = stateAccessors(store, reducerKey, initialState))
 
 const startOperation = () => {
   // Turn on the busy indicator.
   loaderExternalServiceFunctions.setBusy()
   // Indicate to this state that an operation is active.
-  setState({active: true})
+  reducerState.active = true
 }
 
 const operationSuccess = data => {
@@ -40,7 +35,7 @@ const operationFailed = () => {
   // Turn off the busy indicator.
   loaderExternalServiceFunctions.unsetBusy()
   // Indicate to this state that an operation is not active.
-  setState({active: false})
+  reducerState.active = false
   // Let the error module handle the error.
   errorExternalServiceFunctions.setError('Network Error.')
 }
@@ -59,7 +54,5 @@ export const serviceFunctions = {
       operationFailed()
     )
   },
-  clear: store => setState({data: []})
+  clear: () => reducerState.data = []
 }
-
-export const reducer = generalReducer(reducerKey, initialState)

@@ -1,21 +1,21 @@
-import { generalReducer } from 'simpler-redux'
+import { stateAccessors } from 'simpler-redux'
 
 export const reducerKey = 'error'
 
-let store
-export const storeIsDefinedCallback = reduxStore =>
-  (store = reduxStore)
-
-const initialState = {
+export const initialUIState = {
   error: ''
 }
 
+export const initialState = initialUIState
+
+let reducerState
+export const storeIsDefinedCallback = store =>
+  ({reducerState} = stateAccessors(store, reducerKey, initialState))
+
 export const serviceFunctions = {
-  clearError: () => store.setRState(reducerKey, { error: '' })
+  clearError: () => reducerState.error = ''
 }
 
 export const externalServiceFunctions = {
-  setError: error => store.setRState(reducerKey, { error: error })
+  setError: error => reducerState.error = error
 }
-
-export const reducer = generalReducer(reducerKey, initialState)

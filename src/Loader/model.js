@@ -1,18 +1,18 @@
-import { generalReducer, stateAccessors } from 'simpler-redux'
+import { stateAccessors } from 'simpler-redux'
 
 export const reducerKey = 'loader'
 
-let setState
-export const storeIsDefinedCallback = reduxStore =>
-  ({setState} = stateAccessors(reduxStore, reducerKey))
-
-const initialState = {
+export const initialUIState = {
   isBusy: false
 }
 
-export const externalServiceFunctions = {
-  setBusy: () => setState({isBusy: true}, 'setBusy'),
-  unsetBusy: () => setState({isBusy: false}, 'unsetBusy')
-}
+export const initialState = initialUIState
 
-export const reducer = generalReducer(reducerKey, initialState)
+let reducerState
+export const storeIsDefinedCallback = store =>
+  ({reducerState} = stateAccessors(store, reducerKey, initialState))
+
+export const externalServiceFunctions = {
+  setBusy: () => reducerState.isBusy = true,
+  unsetBusy: () => reducerState.isBusy = false
+}

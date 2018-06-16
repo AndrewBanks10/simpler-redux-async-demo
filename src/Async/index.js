@@ -1,5 +1,8 @@
+// Controller
+import { connectWithStore, generalReducer } from 'simpler-redux'
+import uiComponent from './view'
+import * as modelDefinition from './model'
 
-import Container from './controller'
-import { reducerKey, reducer } from './model'
-export default Container
-export { reducerKey, reducer }
+export default connectWithStore({ uiComponent, ...modelDefinition })
+export const reducerKey = modelDefinition.reducerKey
+export const reducer = generalReducer(modelDefinition.reducerKey, modelDefinition.initialState)

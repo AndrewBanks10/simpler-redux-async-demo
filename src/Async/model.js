@@ -1,4 +1,3 @@
-import { stateAccessors } from 'simpler-redux'
 import { externalServiceFunctions as loaderExternalServiceFunctions } from '../Loader'
 import { externalServiceFunctions as errorExternalServiceFunctions } from '../Error'
 
@@ -14,7 +13,7 @@ export const initialUIState = {
 export const initialState = initialUIState
 
 let setState, reducerState
-export const storeIsDefinedCallback = store =>
+export const storeIsDefinedCallback = (store, stateAccessors) =>
   ({setState, reducerState} = stateAccessors(store, reducerKey, initialState))
 
 const startOperation = () => {

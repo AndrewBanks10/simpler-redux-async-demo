@@ -25,7 +25,7 @@
     "react-dom": "^16.3.2",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "simpler-redux": "^0.1.7",
+    "simpler-redux": "^0.1.8",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.0"
   },

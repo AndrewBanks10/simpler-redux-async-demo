@@ -1,5 +1,3 @@
-import { stateAccessors } from 'simpler-redux'
-
 export const reducerKey = 'error'
 
 export const initialUIState = {
@@ -9,7 +7,7 @@ export const initialUIState = {
 export const initialState = initialUIState
 
 let reducerState
-export const storeIsDefinedCallback = store =>
+export const storeIsDefinedCallback = (store, stateAccessors) =>
   ({reducerState} = stateAccessors(store, reducerKey, initialState))
 
 export const serviceFunctions = {

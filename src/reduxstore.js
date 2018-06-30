@@ -1,5 +1,4 @@
-import reducersObject from './reducers'
-import { createStore, combineReducers } from 'redux'
+import { createStore } from 'redux'
 import { registerSimplerRedux } from 'simpler-redux'
 
 let store
@@ -16,7 +15,12 @@ if (module.hot) {
 }
 
 if (typeof store === 'undefined') {
-  store = registerSimplerRedux(createStore(combineReducers(reducersObject)))
+  store = registerSimplerRedux(
+    createStore(
+      state => state
+    ),
+    {}
+  )
 }
 
 export default store

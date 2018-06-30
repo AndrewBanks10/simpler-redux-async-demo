@@ -55,3 +55,5 @@ export const serviceFunctions = {
   },
   clear: () => reducerState.data = []
 }
+
+export const isDynamicReducer = true

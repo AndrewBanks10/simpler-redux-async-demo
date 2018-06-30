@@ -17,3 +17,5 @@ export const serviceFunctions = {
 export const externalServiceFunctions = {
   setError: error => reducerState.error = error
 }
+
+export const isDynamicReducer = true

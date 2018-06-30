@@ -1,7 +1,7 @@
 export const reducerKey = 'loader'
 
 export const initialUIState = {
-  isBusy: false
+  busyCounter: 0
 }
 
 export const initialState = initialUIState
@@ -11,6 +11,8 @@ export const storeIsDefinedCallback = (store, stateAccessors) =>
   ({reducerState} = stateAccessors(store, reducerKey, initialState))
 
 export const externalServiceFunctions = {
-  setBusy: () => reducerState.isBusy = true,
-  unsetBusy: () => reducerState.isBusy = false
+  setBusy: () => reducerState.busyCounter++,
+  unsetBusy: () => reducerState.busyCounter--
 }
+
+export const isDynamicReducer = true

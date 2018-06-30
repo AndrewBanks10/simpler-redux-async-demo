@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default props => {
-  if (props.isBusy) {
+  if (props.busyCounter > 0) {
     return <div className='loader' />
   } else {
     return null

@@ -40,18 +40,18 @@ const operationFailed = () => {
 }
 
 export const serviceFunctions = {
-  onGet: () => {
+  onGet: async function () {
     startOperation()
-    fetch(url).then(response => {
+    try {
+      const response = await fetch(url)
       if (!response.ok) {
         throw new Error('Error')
       }
-      return response.json()
-    }).then(data =>
+      const data = await response.json()
       operationSuccess(data)
-    ).catch(() =>
-      operationFailed()
-    )
+    } catch (ex) {
+      operationFailed()    
+    } 
   },
   clear: () => reducerState.data = []
 }
